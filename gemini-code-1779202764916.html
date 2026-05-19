@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus in Animal Husbandry: Kedah-Kelantan Cattle Growth</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #111827 0%, #065f46 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
+
+    <header class="gradient-bg py-8 px-4 shadow-lg border-b border-emerald-800 text-center">
+        <span class="bg-emerald-500/20 text-emerald-400 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+            SFH: Animal Husbandry Technology Interactive Lab
+        </span>
+        <h1 class="text-3xl md:text-4xl font-extrabold mt-3 text-white tracking-tight">
+            Optimizing Kedah-Kelantan (KK) Cattle Weight Gain via Derivatives
+        </h1>
+        <p class="text-emerald-200/80 mt-2 max-w-2xl mx-auto text-sm md:text-base">
+            Visualize the exact day a local Malaysian beef cattle breed hits its peak growth velocity using calculus.
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <section class="lg:col-span-1 space-y-6 bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
+            
+            <div>
+                <h2 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
+                    <span>🐄</span> The Bioscience Scenario
+                </h2>
+                <p class="text-gray-300 text-sm mt-2 leading-relaxed text-justify">
+                    In Malaysian beef production, the indigenous <strong>Kedah-Kelantan (KK) cattle</strong> breed is highly valued for its heat tolerance and disease resistance. To optimize feed conversion ratios and predict marketing timelines, farmers must track the <strong>Average Daily Gain (ADG)</strong>. 
+                </p>
+                <p class="text-gray-300 text-sm mt-2 leading-relaxed text-justify">
+                    Instead of just measuring absolute weight, applying the <strong>first derivative $f'(x)$</strong> allows us to calculate the exact rate of weight gain per day. This pinpoint accuracy tells production managers exactly when animal growth begins to slow down, signaling the ideal window for dietary adjustments or market scheduling.
+                </p>
+            </div>
+
+            <hr class="border-gray-700">
+
+            <div class="space-y-4">
+                <h2 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
+                    <span>🧮</span> Mathematical Modeling
+                </h2>
+                <p class="text-xs text-gray-400">
+                    Growth follows a realistic sigmoidal pattern, modeled here using a cubic polynomial tailored to Malaysian MARDI growth benchmarking data points (0 to 365 days post-weaning).
+                </p>
+
+                <div class="bg-gray-950 p-4 rounded-xl border border-gray-800">
+                    <span class="text-xs font-semibold text-emerald-500 uppercase tracking-wider block mb-1">Cattle Weight Function $f(x)$</span>
+                    <div class="text-sm font-mono text-white overflow-x-auto py-1">
+                        $f(x) = -0.000004x^3 + 0.0024x^2 + 0.15x + 110$
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">
+                        Yields the total weight in kilograms ($\text{kg}$) at day $x$.
+                    </p>
+                </div>
+
+                <div class="bg-gray-950 p-4 rounded-xl border border-gray-800">
+                    <span class="text-xs font-semibold text-amber-500 uppercase tracking-wider block mb-1">Growth Velocity Function $f'(x)$</span>
+                    <div class="text-sm font-mono text-white overflow-x-auto py-1">
+                        $f'(x) = -0.000012x^2 + 0.0048x + 0.15$
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">
+                        Calculates the instantaneous rate of change ($\text{kg/day}$) at exactly day $x$.
+                    </p>
+                </div>
+            </div>
+
+            <hr class="border-gray-700">
+
+            <div class="text-xs text-gray-500 space-y-1">
+                <span class="font-semibold block uppercase text-gray-400">Data Reference Benchmarks:</span>
+                <p>• MARDI (Malaysian Agricultural Research and Development Institute) Growth Profiles for Kedah-Kelantan cattle breeds.</p>
+                <p>• Department of Veterinary Services Malaysia (DVS) Production parameters.</p>
+            </div>
+
+        </section>
+
+        <section class="lg:col-span-2 space-y-6 flex flex-col justify-between">
+            
+            <div class="bg-gray-800/30 p-4 md:p-6 rounded-2xl border border-gray-700 shadow-inner flex-1">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Interactive Growth Dynamics Curve</h2>
+                        <p class="text-xs text-gray-400">Click anywhere inside the chart grid area to run a derivative analysis at that timeline point.</p>
+                    </div>
+                    <button onclick="restartAnimation()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs px-3 py-2 rounded-lg transition-colors cursor-pointer">
+                        🔄 Replay Growth Cycle
+                    </button>
+                </div>
+                
+                <div class="relative w-full h-[350px] md:h-[400px]">
+                    <canvas id="growthChart"></canvas>
+                </div>
+            </div>
+
+            <div id="analysisWidget" class="bg-gradient-to-r from-gray-800 to-gray-800/80 border-2 border-dashed border-gray-600 p-6 rounded-2xl transition-all duration-300">
+                <div id="widgetPrompt" class="text-center py-4 text-gray-400 space-y-2">
+                    <span class="text-2xl block animate-bounce">👆</span>
+                    <p class="font-medium">No point selected yet.</p>
+                    <p class="text-xs max-w-md mx-auto">Click along the graph lines above to extract the precise derivative calculations and decode what they mean for a livestock technician.</p>
+                </div>
+
+                <div id="widgetData" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <div class="space-y-1 md:border-r border-gray-700 pr-4">
+                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block">Timeline Position</span>
+                        <div class="text-3xl font-extrabold text-white" id="outDay">--</div>
+                        <span class="text-xs text-gray-400">Days Post-Weaning</span>
+                    </div>
+                    
+                    <div class="space-y-1 md:border-r border-gray-700 pr-4">
+                        <span class="text-xs font-bold text-amber-400 uppercase tracking-wider block">Derivative $f'(x)$ Result</span>
+                        <div class="text-3xl font-extrabold text-white" id="outRate">--</div>
+                        <span class="text-xs text-gray-400">Growth Velocity (kg/day)</span>
+                    </div>
+
+                    <div class="space-y-1">
+                        <span class="text-xs font-bold text-sky-400 uppercase tracking-wider block">Husbandry Meaning</span>
+                        <p class="text-xs text-gray-200 leading-relaxed font-medium" id="outExplanation">--</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="text-center py-6 border-t border-gray-800 text-xs text-gray-500 mt-12">
+        Developed for Animal Husbandry Technology Students • Powered by Chart.js & Calculus
+    </footer>
+
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <script>
+        let chartInstance = null;
+
+        // Mathematical Function: f(x) = -0.000004x^3 + 0.0024x^2 + 0.15x + 110
+        function calculateWeight(x) {
+            return (-0.000004 * Math.pow(x, 3)) + (0.0024 * Math.pow(x, 2)) + (0.15 * x) + 110;
+        }
+
+        // Mathematical Derivative Function: f'(x) = -0.000012x^2 + 0.0048x + 0.15
+        function calculateDerivative(x) {
+            return (-0.000012 * Math.pow(x, 2)) + (0.0048 * x) + 0.15;
+        }
+
+        // Generate data arrays for the 365 days cycle
+        const labels = [];
+        const weightData = [];
+        const derivativeData = [];
+
+        for (let day = 0; day <= 365; day += 5) {
+            labels.push(day);
+            weightData.push(calculateWeight(day).toFixed(2));
+            derivativeData.push(calculateDerivative(day).toFixed(3));
+        }
+
+        // Initialize and Build Interactive Chart
+        function initChart() {
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Cattle Weight f(x) (kg)',
+                            data: weightData,
+                            borderColor: '#10b981', // Emerald-500
+                            backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                            borderWidth: 3,
+                            yAxisID: 'yWeight',
+                            tension: 0.2,
+                            fill: true,
+                            pointRadius: 0,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: "Growth Velocity f'(x) (kg/day)",
+                            data: derivativeData,
+                            borderColor: '#f59e0b', // Amber-500
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            yAxisID: 'yDerivative',
+                            tension: 0.2,
+                            pointRadius: 0,
+                            pointHoverRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    animation: {
+                        duration: 2500,
+                        easing: 'easeOutQuart'
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: { color: '#e5e7eb', font: { weight: 'bold' } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: (context) => `Day ${context[0].label}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Days Post-Weaning', color: '#9ca3af' },
+                            grid: { color: 'rgba(75, 85, 99, 0.2)' },
+                            ticks: { color: '#9ca3af' }
+                        },
+                        yWeight: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'Total Animal Mass (kg)', color: '#10b981' },
+                            grid: { color: 'rgba(75, 85, 99, 0.2)' },
+                            ticks: { color: '#10b981' },
+                            min: 100,
+                            max: 300
+                        },
+                        yDerivative: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: { display: true, text: 'Instantaneous Gain Rate f\'(x) (kg/day)', color: '#f59e0b' },
+                            grid: { drawOnChartArea: false },
+                            ticks: { color: '#f59e0b' },
+                            min: 0,
+                            max: 0.8
+                        }
+                    },
+                    // Capture chart click events to process derivatives live
+                    onClick: (event, activeElements) => {
+                        if (activeElements.length > 0) {
+                            const index = activeElements[0].index;
+                            const targetDay = labels[index];
+                            handlePointAnalysis(targetDay);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Process selected data point and generate layman biological analysis
+        function handlePointAnalysis(day) {
+            const currentWeight = calculateWeight(day);
+            const derivativeVal = calculateDerivative(day);
+            
+            // UI elements bindings
+            const widgetPrompt = document.getElementById('widgetPrompt');
+            const widgetData = document.getElementById('widgetData');
+            const analysisWidget = document.getElementById('analysisWidget');
+            
+            // Switch widget layout view from empty prompt state to functional data presentation panel
+            widgetPrompt.classList.add('hidden');
+            widgetData.classList.remove('hidden');
+            
+            // Accentuate widget container to reflect user interaction success status
+            analysisWidget.classList.remove('border-gray-600', 'bg-gray-800');
+            analysisWidget.classList.add('border-emerald-500', 'bg-gray-800/90');
+
+            // Set numeric text values
+            document.getElementById('outDay').innerText = `Day ${day}`;
+            document.getElementById('outRate').innerText = `+${derivativeVal.toFixed(3)}`;
+
+            // Generate field explanation based on biological derivative conditions
+            let explanation = "";
+            if (day <= 100) {
+                explanation = `The derivative value is climbing steadily at +${derivativeVal.toFixed(2)} kg/day. The KK calf is in its accelerated structural growth phase. Metabolism is highly efficient; keep supplying quality starter rations to feed this compounding momentum.`;
+            } else if (day > 100 && day <= 220) {
+                explanation = `The derivative peaks near Day 200 at ~0.63 kg/day. This represents the absolute inflection point of your growth function! Your animal is at maximum metabolic efficiency right here. Capitalize on this optimal period.`;
+            } else if (day > 220 && day <= 320) {
+                explanation = `The derivative value is decreasing (+${derivativeVal.toFixed(2)} kg/day) even though total weight goes up. Growth rate is decelerating as the animal reaches muscle-mass maturity. Feeding costs per unit of gain are starting to rise.`;
+            } else {
+                explanation = `Growth velocity has flattened severely to +${derivativeVal.toFixed(2)} kg/day. The animal has reached biological plateauing. Keeping the cattle beyond this stage without adjusting stocking densities or marketing will reduce your overall herd profitability.`;
+            }
+
+            document.getElementById('outExplanation').innerHTML = `<strong>At Day ${day}</strong>, the animal weighs around <strong>${currentWeight.toFixed(1)}kg</strong>. ${explanation}`;
+        }
+
+        function restartAnimation() {
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+            initChart();
+        }
+
+        // Bootstrapping the application lifecycle on window load
+        window.onload = () => {
+            initChart();
+        };
+    </script>
+</body>
+</html>
